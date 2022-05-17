@@ -13,15 +13,17 @@ app.listen(PORT, () =>{
 
 
 /*
+
 const mongoose = require('mongoose');
 // подключаемся к серве`ру mongo
+
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
   useCreateIndex: true,
   useFindAndModify: false
 });
-*/
 
+*/
 
 
 
