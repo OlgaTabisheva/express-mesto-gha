@@ -1,10 +1,14 @@
-const path=require('path')
-const fs = require('fs').promises
-const users = require('../users-data.json')
+// const path=require('path')
+// const fs = require('fs').promises
+const user = require('../models/user');
 
-const getUser = (req, res) => {
-  const userId = req.param.userId
-  const user = users.find(users.userId === +userId)
+
+
+const getUsers = (req, res) => {
+  user.find({})
+    .then(users => res.send({ data: users }))
+  //const userId = req.param.userId
+  // const user = users.find(users.userId === +userId)
   if (!user) {
     return res.status(404).send({message: 'Пользователь не найден'})
   }
@@ -15,7 +19,11 @@ const  createUser = (req, res) => {
   if(!name || !about || !avatar){
     return res.status(400).send({ message: "Ошибка на стороне пользователя. Возможно имя, о себе или аватар введены некорректно" })
   }
-  fs.readFile(path.resolve(__dirname,'..','users-data.json'),'utf-8')
+  user.create({ name, about, avatar })
+    .then(user => res.send({ data: user }))
+    .catch(() => res.status(500).send({ message: 'Произошла ошибка' }));
+
+ /* fs.readFile(path.resolve(__dirname,'..','users-data.json'),'utf-8')
     .then(fileContent =>{
       const users = JSON.parse(fileContent)
       users.push({
@@ -27,11 +35,14 @@ const  createUser = (req, res) => {
       return users
     }).then(users => fs.writeFile(path.resolve(__dirname,'..','users-data.json'),JSON.stringify(users)))
     .then(()=>res.status(201).send({message: 'Пользователь успешно создан'}))
-    .catch(()=>res.status(500).send({message: 'ошибка сервера'}))
+    .catch(()=>res.status(500).send({message: 'ошибка сервера'}))*/
 }
-const getUsers = (_, res) => {
-  res.status(200).send(users)
-}
+const getUser = (req, res) => {
+  user.findById(req.params.userId)
+    .then(user => res.send({ data: user }))
+    .catch(err => res.status(500).send({ message: 'Произошла ошибка' }));
+};
+
 
 module.exports = {
   getUser,

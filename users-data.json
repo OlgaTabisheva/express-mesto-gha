@@ -1,1 +1,8 @@
-[{"name":"Тестовый Стас","about":"Разработчик","avatar":"https://arte1.ru/images/detailed/4/23608.jpg"},{"name":"Таня","about":"Домохозяйка","avatar":"https://cdn.pixabay.com/photo/2016/09/01/08/24/smiley-1635449_960_720.png"},{"name":"g","about":"Домохозяйка","avatar":"https://cdn.pixabay.com/photo/2016/09/01/08/24/smiley-1635449_960_720.png"},{"userId":3,"name":"Феняня","about":"Домохозяйка","avatar":"https://cdn.pixabay.com/photo/2016/09/01/08/24/smiley-1635449_960_720.png"},{"userId":4,"name":"ФенFяня","about":"Альтруист","avatar":"https://cdn.pixabay.com/photo/2016/09/01/08/24/smiley-1635449_960_720.png"},{"userId":5,"name":"ФенFяня","about":"Альтруист","avatar":"https://cdn.pixabay.com/photo/2016/09/01/08/24/smiley-1635449_960_720.png"},{"userId":6,"name":"ccФенFяня","about":"Альтруист","avatar":"https://cdn.pixabay.com/photo/2016/09/01/08/24/smiley-1635449_960_720.png"},{"userId":7,"name":"ccФенFяня","about":"Альтруист","avatar":"https://cdn.pixabay.com/photo/2016/09/01/08/24/smiley-1635449_960_720.png"},{"userId":8,"name":"ня","about":"ст","avatar":"https://cdn.pixabay.com/photo/2016/09/01/08/24/smiley-1635449_960_720.png"}]
+[
+  {
+    "userId": 0,
+    "name": "Тестовый Стас",
+    "about": "Разработчик",
+    "avatar": "https://arte1.ru/images/detailed/4/23608.jpg"
+  }
+]

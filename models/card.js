@@ -8,23 +8,23 @@ const cardSchema = new mongoose.Schema({
     maxlength: 30, // а максимальная — 30 символов
   },
   link:{
-    type: String, // имя — это строка
-    required: true, // оно должно быть у каждого пользователя, так что имя — обязательное поле
+    type: String,
+    required: true,
   },
   owner:{
-    type: mongoose.Schema.Types.ObjectId, // имя — это строка
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'owner',
-    required: true, // оно должно быть у каждого пользователя, так что имя — обязательное поле
+    required: true,
 
   },
   likes:{
-    type: mongoose.Schema.Types.ObjectId, // имя — это строка
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'likes',
-    required: true, // оно должно быть у каждого пользователя, так что имя — обязательное поле
+    required: true,
     default: [],
   },
   createdAt:{
-    type: Date, // имя — это строка
+    type: Date,
     default: Date.now
 
   }
