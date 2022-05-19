@@ -46,14 +46,14 @@ const patchUser = (req, res) => {
   const {name, about} = req.body
   user.findByIdAndUpdate(req.user._id, {name, about},
     {
-      new: true, // обработчик then получит на вход обновлённую запись
-      runValidators: true, // данные будут валидированы перед изменением
-      upsert: true // если пользователь не найден, он будет создан
+      new: true,
+      runValidators: true,
+      upsert: true
     }
     )
     .then(user => res.send({data: user}))
     .catch((err) => {
-      if (req.user._id === 'ValidationError'){
+      if ((err.name === 'ValidationError') || (err.about === 'ValidationError') ) {
         const fields = Object.keys(err.errors).join(',')
         return res.status(400).send({message: `${fields} Пользователь не обновлен`})
       }
@@ -65,15 +65,15 @@ const patchAvatar = (req, res) => {
   const {avatar} = req.body
   user.findByIdAndUpdate(req.user._id, {avatar},
     {
-      new: true, // обработчик then получит на вход обновлённую запись
-      runValidators: true, // данные будут валидированы перед изменением
-      upsert: true // если пользователь не найден, он будет создан
+      new: true,
+      runValidators: true,
+      upsert: true
     })
     .then(user => res.send({data: user}))
     .catch((err) => {
-      if ((req.params.userId === 'ValidationError') || (req.user._id === 'ValidationError') ){
-        const fields = Object.keys(err.errors).join(',')
-        return res.status(400).send({message: `${fields} Пользователь не найден`})
+      if (err.avatar  === 'ValidationError' ){
+       const fields = Object.keys(err.errors).join(',')
+        return res.status(400).send({message:  `${fields} Пользователь не найден`})
       }
         return res.status(500).send({message: 'Ошибка сервера'})
     })

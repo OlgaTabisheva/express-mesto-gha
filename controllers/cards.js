@@ -43,11 +43,11 @@ const likeCard = (req, res) => {
   console.log(req.user._id)
   card.findByIdAndUpdate(
     req.params.cardId,
-    {$addToSet: {likes: req.user._id}}, // добавить _id в массив, если его там нет
+    {$addToSet: {likes: req.user._id}},
     {
-      new: true, // обработчик then получит на вход обновлённую запись
-      runValidators: true, // данные будут валидированы перед изменением
-      upsert: true // если пользователь не найден, он будет создан
+      new: true,
+      runValidators: true,
+      upsert: true
     },)
     .then(likes => res.send({data: likes}))
     .catch(err => res.status(500).send({message: 'Произошла ошибка'}));
@@ -58,11 +58,11 @@ const dislikeCard = (req, res) => {
   {return res.status(400).send({message: 'Некорректный ID'})}
   card.findByIdAndUpdate(
     req.params.cardId,
-    {$pull: {likes: req.user._id}}, // убрать _id из массива
+    {$pull: {likes: req.user._id}},
     {
-      new: true, // обработчик then получит на вход обновлённую запись
-      runValidators: true, // данные будут валидированы перед изменением
-      upsert: true // если пользователь не найден, он будет создан
+      new: true,
+      runValidators: true,
+      upsert: true
     },)
     .then(likes => res.send({data: likes}))
     .catch(err => res.status(500).send({message: 'Произошла ошибка'}));
