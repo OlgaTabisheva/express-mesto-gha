@@ -10,7 +10,7 @@ const getCards = (req, res) => {
 }
 
 const createCards = (req, res) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.cardId || req.params.userId))
+  if (!mongoose.Types.ObjectId.isValid( req.params.userId))
   {return res.status(400).send({message: 'Некорректный ID'})}
   const {name, link} = req.body
   const owner = req.user._id
