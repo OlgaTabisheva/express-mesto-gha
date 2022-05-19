@@ -72,7 +72,7 @@ const dislikeCard = (req, res) => {
     {
    //   new: true,
       runValidators: true,
-      upsert: true
+     // upsert: true
     },)
     .then((likes) => {
       if (likes === null) {
