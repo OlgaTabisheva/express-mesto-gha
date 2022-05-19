@@ -31,7 +31,12 @@ const deleteCard = (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.cardId || req.params.userId))
   {return res.status(400).send({message: 'Некорректный ID'})}
   card.findByIdAndRemove(req.params.cardId)
-    .then(card => res.send({data: card}))
+    .then((card) => {
+      if (card === null) {
+        return res.status(404).send({message: 'карточка не найдена'})
+      }
+      res.send({data: card})
+    })
     .catch(err => res.status(500).send({message: 'Произошла ошибка'}));
 }
 
@@ -65,7 +70,7 @@ const dislikeCard = (req, res) => {
     req.params.cardId,
     {$pull: {likes: req.user._id}},
     {
-    //  new: true,
+      new: true,
       runValidators: true,
       upsert: true
     },)
