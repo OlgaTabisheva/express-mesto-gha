@@ -70,7 +70,7 @@ const dislikeCard = (req, res) => {
     req.params.cardId,
     {$pull: {likes: req.user._id}},
     {
-      new: true,
+   //   new: true,
       runValidators: true,
       upsert: true
     },)
