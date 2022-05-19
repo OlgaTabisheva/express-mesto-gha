@@ -37,12 +37,19 @@ const getUser = (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.userId))
   {return res.status(400).send({message: 'Некорректный ID'})}
   user.findById(req.params.userId)
-    .then(user => res.send({data: user}))
+    .then((user) =>
+    {
+      if (user === null){
+      return res.status(404).send({message: 'Пользователь не найден'})
+    }
+      res.send({data: user})
+    })
     .catch((err) => {return res.status(500).send({message: 'Ошибка сервера'})
     })
-};
+}
 
 const patchUser = (req, res) => {
+
   const {name, about} = req.body
   user.findByIdAndUpdate(req.user._id, {name, about},
     {
@@ -51,12 +58,13 @@ const patchUser = (req, res) => {
       upsert: true
     }
     )
-    .then(user => res.send({data: user}))
+    .then((user) => {
+      if (user === null)
+      {return res.status(404).send({message: 'Пользователь не найден'})}
+      res.send({data: user})
+    })
     .catch((err) => {
-      if ((err.name === 'ValidationError') || (err.about === 'ValidationError') ) {
-        const fields = Object.keys(err.errors).join(',')
-        return res.status(400).send({message: `${fields} Пользователь не обновлен`})
-      }
+
       return res.status(500).send({message: 'Ошибка сервера'})
     })
 }
