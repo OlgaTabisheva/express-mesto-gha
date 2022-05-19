@@ -1,5 +1,6 @@
 // const path=require('path')
 // const fs = require('fs').promises
+const express = require('express')
 const user = require('../models/user');
 
 const getUsers = (req, res) => {
@@ -33,9 +34,9 @@ const createUser = (req, res) => {
 }
 
 const getUser = (req, res) => {
-/*  if (!req.user._id) {
+  if (req.user._id  === 'ValidationError') {
     return res.status(404).send({message: "Ошибка на стороне пользователя. Возможно имя, о себе или аватар введены некорректно"})
-  }*/
+  }
   user.findById(req.params.userId)
     .then(user => res.send({data: user}))
     .catch((err) => {return res.status(500).send({message: 'Ошибка сервера'})
