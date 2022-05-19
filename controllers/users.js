@@ -2,7 +2,7 @@
 // const fs = require('fs').promises
 const express = require('express')
 const user = require('../models/user');
-
+const mongoose = require('mongoose');
 const getUsers = (req, res) => {
   user.find({})
     .then(users => res.status(200).send({data: users}))
@@ -34,7 +34,7 @@ const createUser = (req, res) => {
 }
 
 const getUser = (req, res) => {
-  if (!ObjectId.isValid(req.user._id))
+  if (!mongoose.Types.ObjectId.isValid(req.user._id))
   {return res.status(400).send({message: 'Некорректный ID'})}
   user.findById(req.params.userId)
     .then(user => res.send({data: user}))
