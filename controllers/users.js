@@ -33,10 +33,13 @@ const createUser = (req, res) => {
 }
 
 const getUser = (req, res) => {
+  if (!req.user._id) {
+    return res.status(404).send({message: "Ошибка на стороне пользователя. Возможно имя, о себе или аватар введены некорректно"})
+  }
   user.findById(req.params.userId)
     .then(user => res.send({data: user}))
     .catch((err) => {
-      if (err.userId === 'ValidationError') {
+      if (err.req.user._id === 'ValidationError') {
         const fields = Object.keys(err.errors).join(',')
         return res.status(400).send({message: `${fields} Пользователь не найден`})
       }
