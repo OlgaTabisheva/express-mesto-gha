@@ -48,7 +48,7 @@ const patchUser = (req, res) => {
     user.findByIdAndUpdate(req.user._id, { name:'Кот Манул' })
       .then(user => res.send({ data: user }))
       .catch((err)=> {
-        if (err.name === 'ValidationError') {
+        if (err.data === 'ValidationError') {
           const fields = Object.keys(err.errors).join(',')
           return res.status(400).send({message: `${fields} Пользователь не обновлен`})
         }
