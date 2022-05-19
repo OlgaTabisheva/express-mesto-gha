@@ -44,7 +44,8 @@ const getUser = (req, res) => {
 };
 
 const patchUser = (req, res) => {
-  user.findByIdAndUpdate(req.user._id, {name: 'Кот Манул'})
+  const {name, about} = req.body
+  user.findByIdAndUpdate(req.user._id, {name, about})
     .then(user => res.send({data: user}))
     .catch((err) => {
       if (req.user._id === 'ValidationError'){
@@ -56,7 +57,8 @@ const patchUser = (req, res) => {
 }
 
 const patchAvatar = (req, res) => {
-  user.findByIdAndUpdate(req.user._id, {avatar: 'https://avatarko.ru/img/kartinka/1/zhivotnye_manul.jpg'})
+  const {avatar} = req.body
+  user.findByIdAndUpdate(req.user._id, {avatar})
     .then(user => res.send({data: user}))
     .catch((err) => {
       if (req.user._id === 'ValidationError'){
