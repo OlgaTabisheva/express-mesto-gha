@@ -19,7 +19,7 @@ const getUsers = (req, res) => {
 const createUser = (req, res) => {
   const {name, about, avatar} = req.body
   if (!name || !about || !avatar) {
-    return res.status(400).send({message: "Ошибка на стороне пользователя. Возможно имя, о себе или аватар введены некорректно"})
+    return res.status(404).send({message: "Ошибка на стороне пользователя. Возможно имя, о себе или аватар введены некорректно"})
   }
   user.create({name, about, avatar})
     .then(user => res.send({data: user}))
@@ -47,7 +47,13 @@ const getUser = (req, res) => {
 const patchUser = (req, res) => {
     user.findByIdAndUpdate(req.user._id, { name:'Кот Манул' })
       .then(user => res.send({ data: user }))
-      .catch(err => res.status(500).send({ message: 'Произошла ошибка' }));
+      .catch((err)=> {
+        if (err.name === 'ValidationError') {
+          const fields = Object.keys(err.errors).join(',')
+          return res.status(400).send({message: `${fields} Пользователь не обновлен`})
+        }
+        return res.status(500).send({message: 'Ошибка сервера'})
+      })
 }
 
 const patchAvatar = (req, res) => {
