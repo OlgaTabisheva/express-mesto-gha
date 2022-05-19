@@ -10,17 +10,11 @@ const getUsers = (req, res) => {
     .catch((err)=> {
       if (err.user === 'ValidationError') {
         const fields = Object.keys(err.errors).join(',')
-        return res.status(404).send({message: `${fields} Пользователь не найден`})
+        return res.status(400).send({message: `${fields} Пользователь не найден`})
       }
       return res.status(500).send({message: 'Ошибка сервера'})
     })
   }
-
-
-
-
-
-
 
 const createUser = (req, res) => {
   const {name, about, avatar} = req.body
@@ -41,8 +35,15 @@ const createUser = (req, res) => {
 const getUser = (req, res) => {
   user.findById(req.params.userId)
     .then(user => res.send({data: user}))
-    .catch(err => res.status(500).send({message: 'Произошла ошибка'}));
+.catch((err)=> {
+    if (err.userId === 'ValidationError') {
+      const fields = Object.keys(err.errors).join(',')
+      return res.status(404).send({message: `${fields} Пользователь не найден`})
+    }
+    return res.status(500).send({message: 'Ошибка сервера'})
+  })
 };
+
 const patchUser = (req, res) => {
     user.findByIdAndUpdate(req.user._id, { name:'Кот Манул' })
       .then(user => res.send({ data: user }))
