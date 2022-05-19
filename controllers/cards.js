@@ -28,9 +28,10 @@ const deleteCard = (req, res) => {
 }
 
 const likeCard = (req, res) => {
+  console.log(req.user._id )
   card.findByIdAndUpdate(
     req.params.cardId,
-    { $addToSet: { likes: req.user._id } }, // добавить _id в массив, если его там нет
+    { $addToSet: { likes:[req.user._id] } }, // добавить _id в массив, если его там нет
     { new: true },)
 }
 const dislikeCard = (req, res) => {
