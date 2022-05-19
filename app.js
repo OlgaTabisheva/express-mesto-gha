@@ -19,6 +19,9 @@ app.use((req, res, next) => {
 
 app.use('/', userRouter)
 app.use('/', cardRouter)
+app.use( (req, res)=>{
+  res.status(404).send( {message: 'Ошибка'});
+});
 const mongoose = require('mongoose');
 // подключаемся к серверу mongo
 mongoose.connect('mongodb://localhost:27017/mestodb', {
