@@ -18,7 +18,13 @@ const createCards = (req, res) => {
   }
   card.create({name, link, owner})
     .then(card => res.send({data: card}))
-    .catch((err) => res.status(500).send({message: 'Произошла ошибка' + err}));
+.catch(err => {
+    if (err.name === 'ValidationError') {
+      const fields = Object.keys(err.errors).join(',')
+      return res.status(400).send({message: `${fields} is not correct`})
+    }
+    res.status(500).send({message: 'Произошла ошибка'});
+  })
 }
 
 const deleteCard = (req, res) => {
