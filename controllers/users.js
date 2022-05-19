@@ -34,9 +34,8 @@ const createUser = (req, res) => {
 }
 
 const getUser = (req, res) => {
-  if (req.user._id  === 'ValidationError') {
-    return res.status(404).send({message: "Ошибка на стороне пользователя. Возможно имя, о себе или аватар введены некорректно"})
-  }
+  if (!ObjectId.isValid(req.user._id))
+  {return res.status(400).send({message: 'Некорректный ID'})}
   user.findById(req.params.userId)
     .then(user => res.send({data: user}))
     .catch((err) => {return res.status(500).send({message: 'Ошибка сервера'})

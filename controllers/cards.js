@@ -10,6 +10,8 @@ const getCards = (req, res) => {
 }
 
 const createCards = (req, res) => {
+  if (!ObjectId.isValid(req.params.cardId || req.user._id))
+  {return res.status(400).send({message: 'Некорректный ID'})}
   const {name, link} = req.body
   const owner = req.user._id
   console.log(owner)
@@ -28,12 +30,16 @@ const createCards = (req, res) => {
 }
 
 const deleteCard = (req, res) => {
+  if (!ObjectId.isValid(req.params.cardId || req.user._id))
+  {return res.status(404).send({message: 'Некорректный ID'})}
   card.findByIdAndRemove(req.params.cardId)
     .then(card => res.send({data: card}))
     .catch(err => res.status(500).send({message: 'Произошла ошибка'}));
 }
 
 const likeCard = (req, res) => {
+  if (!ObjectId.isValid(req.params.cardId || req.user._id))
+  {return res.status(404).send({message: 'Некорректный ID'})}
   console.log(req.user._id)
   card.findByIdAndUpdate(
     req.params.cardId,
