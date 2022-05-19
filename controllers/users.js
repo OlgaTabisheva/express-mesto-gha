@@ -7,9 +7,10 @@ const getUsers = (req, res) => {
     .then(users => res.status(200).send({data: users}))
   //const userId = req.param.userId
   // const user = users.find(users.userId === +userId)
-    .catch(()=> {
-      if (!user) {
-        return res.status(404).send({message: 'Пользователь не найден'})
+    .catch((err)=> {
+      if (err.user === 'ValidationError') {
+        const fields = Object.keys(err.errors).join(',')
+        return res.status(404).send({message: `${fields} Пользователь не найден`})
       }
       return res.status(500).send({message: 'Ошибка сервера'})
     })
