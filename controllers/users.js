@@ -19,7 +19,7 @@ const getUsers = (req, res) => {
 const createUser = (req, res) => {
   const {name, about, avatar} = req.body
   if (!name || !about || !avatar) {
-    return res.status(404).send({message: "Ошибка на стороне пользователя. Возможно имя, о себе или аватар введены некорректно"})
+    return res.status(400).send({message: "Ошибка на стороне пользователя. Возможно имя, о себе или аватар введены некорректно"})
   }
   user.create({name, about, avatar})
     .then(user => res.send({data: user}))
