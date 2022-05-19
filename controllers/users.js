@@ -44,7 +44,13 @@ const getUser = (req, res) => {
 
 const patchUser = (req, res) => {
   const {name, about} = req.body
-  user.findByIdAndUpdate(req.user._id, {name, about})
+  user.findByIdAndUpdate(req.user._id, {name, about},
+    {
+      new: true, // обработчик then получит на вход обновлённую запись
+      runValidators: true, // данные будут валидированы перед изменением
+      upsert: true // если пользователь не найден, он будет создан
+    }
+    )
     .then(user => res.send({data: user}))
     .catch((err) => {
       if (req.user._id === 'ValidationError'){
@@ -57,7 +63,12 @@ const patchUser = (req, res) => {
 
 const patchAvatar = (req, res) => {
   const {avatar} = req.body
-  user.findByIdAndUpdate(req.user._id, {avatar})
+  user.findByIdAndUpdate(req.user._id, {avatar},
+    {
+      new: true, // обработчик then получит на вход обновлённую запись
+      runValidators: true, // данные будут валидированы перед изменением
+      upsert: true // если пользователь не найден, он будет создан
+    })
     .then(user => res.send({data: user}))
     .catch((err) => {
       if ((req.params.userId === 'ValidationError') || (req.user._id === 'ValidationError') ){

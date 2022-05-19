@@ -44,7 +44,11 @@ const likeCard = (req, res) => {
   card.findByIdAndUpdate(
     req.params.cardId,
     {$addToSet: {likes: req.user._id}}, // добавить _id в массив, если его там нет
-    {new: true},)
+    {
+      new: true, // обработчик then получит на вход обновлённую запись
+      runValidators: true, // данные будут валидированы перед изменением
+      upsert: true // если пользователь не найден, он будет создан
+    },)
     .then(likes => res.send({data: likes}))
     .catch(err => res.status(500).send({message: 'Произошла ошибка'}));
 }
@@ -55,7 +59,11 @@ const dislikeCard = (req, res) => {
   card.findByIdAndUpdate(
     req.params.cardId,
     {$pull: {likes: req.user._id}}, // убрать _id из массива
-    {new: true},)
+    {
+      new: true, // обработчик then получит на вход обновлённую запись
+      runValidators: true, // данные будут валидированы перед изменением
+      upsert: true // если пользователь не найден, он будет создан
+    },)
     .then(likes => res.send({data: likes}))
     .catch(err => res.status(500).send({message: 'Произошла ошибка'}));
 }
