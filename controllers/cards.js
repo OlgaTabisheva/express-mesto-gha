@@ -18,13 +18,13 @@ const createCards = (req, res) => {
   }
   card.create({name, link, owner})
     .then(card => res.send({data: card}))
-.catch(err => {
-    if (err.name === 'ValidationError') {
-      const fields = Object.keys(err.errors).join(',')
-      return res.status(400).send({message: `${fields} is not correct`})
-    }
-    res.status(500).send({message: 'Произошла ошибка'});
-  })
+    .catch(err => {
+      if (err.name === 'ValidationError') {
+        const fields = Object.keys(err.errors).join(',')
+        return res.status(400).send({message: `${fields} is not correct`})
+      }
+      res.status(500).send({message: 'Произошла ошибка'});
+    })
 }
 
 const deleteCard = (req, res) => {
@@ -44,8 +44,8 @@ const likeCard = (req, res) => {
 const dislikeCard = (req, res) => {
   card.findByIdAndUpdate(
     req.params.cardId,
-    { $pull: { likes: req.user._id } }, // убрать _id из массива
-    { new: true },)
+    {$pull: {likes: req.user._id}}, // убрать _id из массива
+    {new: true},)
 }
 
 
