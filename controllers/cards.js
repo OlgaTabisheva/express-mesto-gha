@@ -43,11 +43,18 @@ const likeCard = (req, res) => {
     req.params.cardId,
     {$addToSet: {likes: req.user._id}},
     {
-      new: true,
+     // new: true,
       runValidators: true,
       upsert: true
     },)
-    .then(likes => res.send({data: likes}))
+    .then((likes) =>
+  {
+    if (likes === null) {
+      return res.status(404).send({message: 'Пользователь не найден'})
+    }
+    res.send({data: likes})
+
+  })
     .catch(err => res.status(500).send({message: 'Произошла ошибка'}));
 }
 
@@ -58,11 +65,17 @@ const dislikeCard = (req, res) => {
     req.params.cardId,
     {$pull: {likes: req.user._id}},
     {
-      new: true,
+    //  new: true,
       runValidators: true,
       upsert: true
     },)
-    .then(likes => res.send({data: likes}))
+    .then((likes) => {
+      if (likes === null) {
+        return res.status(404).send({message: 'Пользователь не найден'})
+      }
+      res.send({data: likes})
+
+    })
     .catch(err => res.status(500).send({message: 'Произошла ошибка'}));
 }
 
