@@ -7,22 +7,22 @@ const cardSchema = new mongoose.Schema({
     minlength: 2, // минимальная длина имени — 2 символа
     maxlength: 30, // а максимальная — 30 символов
   },
-  link:{
+  link: {
     type: String,
     required: true,
   },
-  owner:{
+  owner: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
     required: true,
 
   },
-  likes:[{
+  likes: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
     default: [],
   }],
-  createdAt:{
+  createdAt: {
     type: Date,
     default: Date.now
 

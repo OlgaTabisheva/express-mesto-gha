@@ -17,8 +17,8 @@ app.use((req, res, next) => {
   next();
 });
 
-app.use('/',userRouter)
-app.use('/',cardRouter)
+app.use('/', userRouter)
+app.use('/', cardRouter)
 const mongoose = require('mongoose');
 // подключаемся к серверу mongo
 mongoose.connect('mongodb://localhost:27017/mestodb', {
@@ -27,9 +27,7 @@ mongoose.connect('mongodb://localhost:27017/mestodb', {
 });
 
 
-
-
-app.listen(PORT, () =>{
+app.listen(PORT, () => {
   console.log('Сервер запущен')
 });
 
