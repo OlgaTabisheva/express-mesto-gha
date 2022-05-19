@@ -34,7 +34,7 @@ const createUser = (req, res) => {
 }
 
 const getUser = (req, res) => {
-  if (!mongoose.Types.ObjectId.isValid(req.user._id))
+  if (!mongoose.Types.ObjectId.isValid(req.params.userId))
   {return res.status(400).send({message: 'Некорректный ID'})}
   user.findById(req.params.userId)
     .then(user => res.send({data: user}))
