@@ -50,6 +50,8 @@ const likeCard = (req, res) => {
 }
 
 const dislikeCard = (req, res) => {
+  if (!ObjectId.isValid(req.params.cardId || req.user._id))
+  {return res.status(404).send({message: 'Некорректный ID'})}
   card.findByIdAndUpdate(
     req.params.cardId,
     {$pull: {likes: req.user._id}}, // убрать _id из массива
