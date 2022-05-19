@@ -60,7 +60,7 @@ const patchAvatar = (req, res) => {
   user.findByIdAndUpdate(req.user._id, {avatar})
     .then(user => res.send({data: user}))
     .catch((err) => {
-      if (req.user._id === 'ValidationError'){
+      if ((req.params.userId === 'ValidationError') || (req.user._id === 'ValidationError') ){
         const fields = Object.keys(err.errors).join(',')
         return res.status(400).send({message: `${fields} Пользователь не найден`})
       }
