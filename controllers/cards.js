@@ -31,7 +31,7 @@ const createCards = (req, res) => {
 
 const deleteCard = (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.cardId || req.params.userId))
-  {return res.status(404).send({message: 'Некорректный ID'})}
+  {return res.status(400).send({message: 'Некорректный ID'})}
   card.findByIdAndRemove(req.params.cardId)
     .then(card => res.send({data: card}))
     .catch(err => res.status(500).send({message: 'Произошла ошибка'}));
@@ -39,7 +39,7 @@ const deleteCard = (req, res) => {
 
 const likeCard = (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.cardId || req.params.userId))
-  {return res.status(404).send({message: 'Некорректный ID'})}
+  {return res.status(400).send({message: 'Некорректный ID'})}
   console.log(req.user._id)
   card.findByIdAndUpdate(
     req.params.cardId,
@@ -51,7 +51,7 @@ const likeCard = (req, res) => {
 
 const dislikeCard = (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.cardId || req.params.userId))
-  {return res.status(404).send({message: 'Некорректный ID'})}
+  {return res.status(400).send({message: 'Некорректный ID'})}
   card.findByIdAndUpdate(
     req.params.cardId,
     {$pull: {likes: req.user._id}}, // убрать _id из массива
