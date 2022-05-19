@@ -40,8 +40,7 @@ const getUser = (req, res) => {
     .then(user => res.send({data: user}))
     .catch((err) => {
       if (err.req.user._id === 'ValidationError') {
-        const fields = Object.keys(err.errors).join(',')
-        return res.status(400).send({message: `${fields} Пользователь не найден`})
+        return res.status(400).send({message: `Пользователь не найден`})
       }
       return res.status(500).send({message: 'Ошибка сервера'})
     })
