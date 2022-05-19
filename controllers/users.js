@@ -21,13 +21,8 @@ const createUser = (req, res) => {
     .then(user => res.send({data: user}))
     .catch(err => {
       if (err.name === 'ValidationError') {
-        return res.status(400).send({message: 'Произошла ошибка'})
-      }
-      if (err.about === 'ValidationError') {
-        return res.status(400).send({message: 'Произошла ошибка'})
-      }
-      if (err.avatar === 'ValidationError') {
-        return res.status(400).send({message: 'Произошла ошибка'})
+        const fields = Object.keys(err.errors).join(',')
+        return res.status(400).send({message: `${fields} is not correct`})
       }
       res.status(500).send({message: 'Произошла ошибка'});
     })
