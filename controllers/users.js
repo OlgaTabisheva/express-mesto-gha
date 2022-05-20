@@ -66,7 +66,7 @@ const patchUser = (req, res) => {
 };
 
 const patchAvatar = (req, res) => {
-  const avatar = req.body;
+  const {avatar} = req.body;
   user.findByIdAndUpdate(
     req.user._id,
     { avatar },
