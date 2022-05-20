@@ -28,8 +28,8 @@ const createCards = (req, res) => {
 }
 
 const deleteCard = (req, res) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.cardId || req.params.userId))
-  {return res.status(400).send({message: 'Некорректный ID'})}
+//  if (!mongoose.Types.ObjectId.isValid(req.params.cardId || req.params.userId))
+ // {return res.status(400).send({message: 'Некорректный ID'})}
   card.findByIdAndRemove(req.params.cardId)
     .then((card) => {
       if (card === null) {
@@ -41,9 +41,9 @@ const deleteCard = (req, res) => {
 }
 
 const likeCard = (req, res) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.cardId || req.params.userId))
-  {return res.status(400).send({message: 'Некорректный ID'})}
-  console.log(req.user._id)
+ // if (!mongoose.Types.ObjectId.isValid(req.params.cardId || req.params.userId))
+//  {return res.status(400).send({message: 'Некорректный ID'})}
+//  console.log(req.user._id)
   card.findByIdAndUpdate(
     req.params.cardId,
     {$addToSet: {likes: req.user._id}},
