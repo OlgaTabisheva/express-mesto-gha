@@ -7,5 +7,4 @@ router.get('/users', getUsers);
 router.patch('/users/me', patchUser);
 router.patch('/users/me/avatar', patchAvatar);
 
-
 module.exports.userRouter = router
