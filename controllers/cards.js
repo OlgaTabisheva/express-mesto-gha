@@ -4,9 +4,7 @@ const mongoose = require('mongoose');
 const getCards = (req, res) => {
   card.find({})
     .then(cards => res.send({data: cards}))
-  if (!card) {
-    return res.status(404).send({message: 'Карточка не найдена'})
-  }
+    .catch(() => res.status(500).send({message: 'Ошибка сервера'}));
 }
 
 const createCards = (req, res) => {
@@ -28,7 +26,7 @@ const createCards = (req, res) => {
 }
 
 const deleteCard = (req, res) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.cardId || req.params.userId)) {
+  if (!mongoose.Types.ObjectId.isValid(req.params.cardId)) {
     return res.status(400).send({message: 'Некорректный ID'})
   }
   card.findByIdAndRemove(req.params.cardId)
@@ -42,7 +40,7 @@ const deleteCard = (req, res) => {
 }
 
 const likeCard = (req, res) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.cardId || req.params.userId)) {
+  if (!mongoose.Types.ObjectId.isValid(req.params.cardId)) {
     return res.status(400).send({message: 'Некорректный ID'})
   }
   card.findByIdAndUpdate(
@@ -60,7 +58,7 @@ const likeCard = (req, res) => {
 }
 
 const dislikeCard = (req, res) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.cardId || req.params.userId)) {
+  if (!mongoose.Types.ObjectId.isValid(req.params.cardId)) {
     return res.status(400).send({message: 'Некорректный ID'})
   }
   card.findByIdAndUpdate(

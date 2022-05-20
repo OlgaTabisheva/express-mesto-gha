@@ -51,7 +51,6 @@ const patchUser = (req, res) => {
     {
       new: true,
       runValidators: true,
-      upsert: true
     }
   )
     .then((user) => {
@@ -72,7 +71,6 @@ const patchAvatar = (req, res) => {
     {
       new: true,
       runValidators: true,
-      upsert: true
     })
     .then(user => res.send({data: user}))
     .catch((err) => {

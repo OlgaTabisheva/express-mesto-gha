@@ -7,14 +7,14 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node app.js",
     "dev": "nodemon app.js",
-    "lint": "npx eslint app.js"
+    "lint": "npx eslint. app.js"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/OlgaTabisheva/express-mesto-gha.git"
   },
   "keywords": [],
-  "author": "",
+  "author": "Olga",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/OlgaTabisheva/express-mesto-gha/issues"
