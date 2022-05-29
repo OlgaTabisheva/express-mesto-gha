@@ -1,10 +1,9 @@
 const mongoose = require('mongoose');
-const user = require('../models/user');
-const bcrypt = require('bcryptjs'); // импортируем bcrypt
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs'); // импортируем bcrypt
+const user = require('../models/user');
 
 const getUsers = (req, res) => {
-
   user.find({})
     .then((users) => res.status(200).send({ data: users }))
     .catch((err) => {
@@ -17,12 +16,14 @@ const getUsers = (req, res) => {
 };
 
 const createUser = (req, res) => {
-  const { name, about, avatar, email, password } = req.body;
+  const {
+    name, about, avatar, email, password,
+  } = req.body;
   if (!email || !password) {
     return res.status(400).send({ message: 'Ошибка на стороне пользователя. Возможно емаил и пароль введены некорректно' });
   }
-  bcrypt.hash(req.body.password, 10)
-    .then(hash => user.create({
+  return bcrypt.hash(req.body.password, 10)
+    .then((hash) => user.create({
       name,
       about,
       avatar,
@@ -95,29 +96,26 @@ const patchAvatar = (req, res) => {
     });
 };
 
-const login = (req, res)  =>{
-  console.log(req.body)
+const login = (req, res) => {
   const { email, password } = req.body;
 
-  return user.find({"email":email, "password": password})
-    .then((user) => {
+  return user.find({ email, password })
+    .then((userN) => {
       res.send({
-        token: jwt.sign({ _id: user._id },  "012345",{
-          expiresIn: '7d'
-        } )
+        token: jwt.sign({ _id: userN._id }, '012345', {
+          expiresIn: '7d',
+        }),
       });
     })
     .catch((err) => {
       res.status(401).send({ message: err.message });
     });
-}
-
-
-  module.exports = {
+};
+module.exports = {
   getUser,
   createUser,
   getUsers,
   patchUser,
   patchAvatar,
-  login
+  login,
 };

@@ -6,9 +6,7 @@ const handleAuthError = (res) => {
     .send({ message: 'Необходима авторизация' });
 };
 
-const extractBearerToken = (header) => {
-  return header.replace('Bearer ', '');
-};
+const extractBearerToken = (header) => { header.replace('Bearer ', ''); };
 
 module.exports = (req, res, next) => {
   const { authorization } = req.headers;
@@ -16,7 +14,6 @@ module.exports = (req, res, next) => {
   if (!authorization || !authorization.startsWith('Bearer ')) {
     return handleAuthError(res);
   }
-
   const token = extractBearerToken(authorization);
   let payload;
 
@@ -28,5 +25,5 @@ module.exports = (req, res, next) => {
 
   req.user = payload; // записываем пейлоуд в объект запроса
 
-  next(); // пропускаем запрос дальше
+  return next(); // пропускаем запрос дальше
 };
