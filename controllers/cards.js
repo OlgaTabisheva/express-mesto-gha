@@ -25,11 +25,12 @@ const createCards = (req, res) => {
 };
 
 const deleteCard = (req, res) => {
-  const owner = req.user._id;
+  const { owner } = req.user._id;
+  const { cardOwner } = card.owner._id;
   if (!mongoose.Types.ObjectId.isValid(req.params.cardId)) {
     return res.status(400).send({ message: 'Некорректный ID' });
   }
-  if (owner) {
+  if (owner !== cardOwner) {
     return res.status(400).send({ message: 'чужая карточка' });
   }
   return card.findByIdAndRemove(req.params.cardId)
