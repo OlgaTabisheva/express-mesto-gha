@@ -11,9 +11,8 @@ const { createUser, login } = require('./controllers/users');
 app.use(express.json());
 app.post('/signin', login);
 app.post('/signup', createUser);
-app.use(auth);
-app.use('/', userRouter);
-app.use('/', cardRouter);
+app.use('/', auth, userRouter);
+app.use('/', auth, cardRouter);
 app.use((req, res) => {
   res.status(404).send({ message: 'Ошибка' });
 });
