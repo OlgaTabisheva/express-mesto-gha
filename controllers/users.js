@@ -54,6 +54,29 @@ const getUser = (req, res) => {
     .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
 };
 
+const getUserMe = (req, res) => {
+
+  user.find(
+    { name, about, email, avatar },
+    {
+      new: true,
+      runValidators: true,
+    },
+  )
+    .then((newUser) => {
+      res.send({ data: newUser });
+    })
+    .catch((err) => {
+      if (err.name === 'ValidationError' || err.about === 'ValidationError') {
+        const fields = Object.keys(err.errors).join(',');
+        return res.status(400).send({ message: `${fields} Ошибка` });
+      }
+      return res.status(500).send({ message: 'Ошибка сервера' });
+    });
+};
+
+
+
 const patchUser = (req, res) => {
   const { name, about } = req.body;
   user.findByIdAndUpdate(
@@ -97,20 +120,36 @@ const patchAvatar = (req, res) => {
 };
 
 const login = (req, res) => {
-  const { email, password } = req.body;
-
-  return user.find({ email, password })
-    .then((userN) => {
-      res.send({
-        token: jwt.sign({ _id: userN._id }, '012345', {
-          expiresIn: '7d',
-        }),
-      });
+  const {email, password} = req.body;
+console.log(req.body)
+  user.findOne({ email }).select('+password')
+    .then((userM) => {
+      console.log(userM.password)
+      if (!userM) {
+        // перейдём в .catch, отклонив промис
+        return Promise.reject(new Error('Что-то не так с почтой или паролем'));
+      }
+      return bcrypt.compare(password, userM.password);
     })
-    .catch((err) => {
-      res.status(401).send({ message: err.message });
-    });
-};
+    .then((matched) => {
+      if (!matched) {
+        // хеши не совпали — отклоняем промис
+        return Promise.reject(new Error('Неправильные почта или пароль'));
+      }
+      // аутентификация успешна
+      res.send({
+        token: jwt.sign({_id: matched._id}, 'some-secret-key', {
+          expiresIn: '7d',
+        })
+      })
+
+    }) .catch((err) => {
+    res.status(401).send({message: err.message});
+  });
+
+}
+
+
 module.exports = {
   getUser,
   createUser,
@@ -118,4 +157,5 @@ module.exports = {
   patchUser,
   patchAvatar,
   login,
+  getUserMe
 };
