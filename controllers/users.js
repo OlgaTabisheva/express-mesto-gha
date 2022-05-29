@@ -55,13 +55,9 @@ const getUser = (req, res) => {
 };
 
 const getUserMe = (req, res) => {
-
+  const { _id } = req.user._id;
   user.find(
-    { name, about, email, avatar },
-    {
-      new: true,
-      runValidators: true,
-    },
+    { _id },
   )
     .then((newUser) => {
       res.send({ data: newUser });
@@ -74,8 +70,6 @@ const getUserMe = (req, res) => {
       return res.status(500).send({ message: 'Ошибка сервера' });
     });
 };
-
-
 
 const patchUser = (req, res) => {
   const { name, about } = req.body;
@@ -120,35 +114,26 @@ const patchAvatar = (req, res) => {
 };
 
 const login = (req, res) => {
-  const {email, password} = req.body;
-console.log(req.body)
+  const { email, password } = req.body;
   user.findOne({ email }).select('+password')
     .then((userM) => {
-      console.log(userM.password)
       if (!userM) {
         // перейдём в .catch, отклонив промис
         return Promise.reject(new Error('Что-то не так с почтой или паролем'));
       }
-      return bcrypt.compare(password, userM.password);
-    })
-    .then((matched) => {
-      if (!matched) {
-        // хеши не совпали — отклоняем промис
-        return Promise.reject(new Error('Неправильные почта или пароль'));
+      if (bcrypt.compare(password, userM.password)) {
+        return res.send({
+          token: jwt.sign({ _id: userM._id }, 'some-secret-key', {
+            expiresIn: '7d',
+          }),
+        });
       }
-      // аутентификация успешна
-      res.send({
-        token: jwt.sign({_id: matched._id}, 'some-secret-key', {
-          expiresIn: '7d',
-        })
-      })
-
-    }) .catch((err) => {
-    res.status(401).send({message: err.message});
-  });
-
-}
-
+      return res.status(401).send({ message: 'неверный пользователь или пароль' });
+    })
+    .catch((err) => {
+      res.status(401).send({ message: err.message });
+    });
+};
 
 module.exports = {
   getUser,
@@ -157,5 +142,5 @@ module.exports = {
   patchUser,
   patchAvatar,
   login,
-  getUserMe
+  getUserMe,
 };
