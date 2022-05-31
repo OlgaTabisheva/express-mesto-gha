@@ -10,33 +10,12 @@ router.get('/users/me', celebrate({
     text: Joi.string().required().min(2),
   }),
 }), getUserMe);
-router.get('/users/:userId', celebrate({
-  body: Joi.object().keys({
-    title: Joi.string().required().min(2).max(30),
-    text: Joi.string().required().min(2),
-  }),
-}), getUser);
+router.get('/users/:userId', getUser);
 router.patch(
   '/users/me',
-  celebrate({
-    body: Joi.object().keys({
-      title: Joi.string().required().min(2).max(30),
-      text: Joi.string().required().min(2),
-    }),
-  }),
   patchUser,
 );
-router.get('/users', celebrate({
-  body: Joi.object().keys({
-    title: Joi.string().required().min(2).max(30),
-    text: Joi.string().required().min(2),
-  }),
-}), getUsers);
-router.patch('/users/me/avatar', celebrate({
-  body: Joi.object().keys({
-    title: Joi.string().required().min(2).max(30),
-    text: Joi.string().required().min(2),
-  }),
-}), patchAvatar);
+router.get('/users', getUsers);
+router.patch('/users/me/avatar', patchAvatar);
 
 module.exports.userRouter = router;

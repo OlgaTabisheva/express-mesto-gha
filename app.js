@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const express = require('express');
+const { celebrate, Joi } = require('celebrate');
 const { userRouter } = require('./routes/user');
 const { cardRouter } = require('./routes/card');
 const auth = require('./middlewares/auth');
@@ -10,7 +11,12 @@ const { createUser, login } = require('./controllers/users');
 
 app.use(express.json());
 app.post('/signin', login);
-app.post('/signup', createUser);
+app.post('/signup', celebrate({
+  body: Joi.object().keys({
+    title: Joi.string().required().min(2).max(30),
+    text: Joi.string().required().min(2),
+  }),
+}), createUser);
 app.use('/', auth, userRouter);
 app.use('/', auth, cardRouter);
 app.use((req, res) => {
