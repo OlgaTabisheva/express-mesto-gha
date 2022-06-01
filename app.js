@@ -4,6 +4,7 @@ const { celebrate, Joi } = require('celebrate');
 const { userRouter } = require('./routes/user');
 const { cardRouter } = require('./routes/card');
 const auth = require('./middlewares/auth');
+const { errors } = require('celebrate');
 
 const app = express();
 const { PORT = 3000 } = process.env;
@@ -22,6 +23,7 @@ app.post('/signup', celebrate({
 }), createUser);
 app.use('/', auth, userRouter);
 app.use('/', auth, cardRouter);
+app.use(errors());
 app.use((req, res) => {
   res.status(404).send({ message: 'Ошибка' });
 });
