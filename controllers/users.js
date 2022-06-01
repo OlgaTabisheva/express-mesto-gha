@@ -23,12 +23,11 @@ const createUser = (req, res) => {
     return res.status(400).send({ message: 'Ошибка на стороне пользователя. Возможно емаил и пароль введены некорректно' });
   }
   return bcrypt.hash(req.body.password, 10)
-    .then((hash) => user.create({
+    .then(() => user.create({
       name,
       about,
       avatar,
       email: req.body.email,
-      password: hash, // записываем хеш в базу
     }))
     .then((newUser) => res.send({ data: newUser }))
     .catch((err) => {
