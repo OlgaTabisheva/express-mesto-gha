@@ -11,18 +11,7 @@ router.post('/cards', celebrate({
     link: Joi.string().uri(),
   }),
 }), createCards);
-router.delete('/cards/:cardId', celebrate({
-  // валидируем параметры
-  params: Joi.object().keys({
-    postId: Joi.string().alphanum().length(24),
-  }),
-  headers: Joi.object().keys({
-    // валидируем заголовки
-  }),
-  query: Joi.object().keys({
-    // валидируем query
-  }).unknown(true),
-}), deleteCard);
+router.delete('/cards/:cardId', deleteCard);
 router.put('/cards/:cardId/likes', likeCard);
 router.delete('/cards/:cardId/likes', dislikeCard);
 module.exports.cardRouter = router;

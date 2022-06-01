@@ -9,7 +9,7 @@ const getCards = (req, res) => {
 
 const createCards = (req, res) => {
   const { name, link } = req.body;
-  const owner = req.user._id;
+  const owner = req.user;
   if (!name || !link) {
     return res.status(400).send({ message: 'Ошибка на стороне пользователя. Данные карточки заполненны не полностью' });
   }
@@ -25,13 +25,9 @@ const createCards = (req, res) => {
 };
 
 const deleteCard = (req, res) => {
-  const { owner } = req.user._id;
-  const { cardOwner } = card.owner._id;
+
   if (!mongoose.Types.ObjectId.isValid(req.params.cardId)) {
     return res.status(400).send({ message: 'Некорректный ID' });
-  }
-  if (owner !== cardOwner) {
-    return res.status(400).send({ message: 'чужая карточка' });
   }
   return card.findByIdAndRemove(req.params.cardId)
     .then((newCard) => {
@@ -49,7 +45,7 @@ const likeCard = (req, res) => {
   }
   return card.findByIdAndUpdate(
     req.params.cardId,
-    { $addToSet: { likes: req.user._id } },
+    { $addToSet: { likes: req.user } },
     {},
   )
     .then((likes) => {
@@ -67,7 +63,7 @@ const dislikeCard = (req, res) => {
   }
   return card.findByIdAndUpdate(
     req.params.cardId,
-    { $pull: { likes: req.user._id } },
+    { $pull: { likes: req.user} },
     {},
   )
     .then((likes) => {
