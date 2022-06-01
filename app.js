@@ -27,7 +27,7 @@ app.use((req, res) => {
 });
 app.use((err, req, res, next) => {
   // если у ошибки нет статуса, выставляем 500
-  const { statusCode = 401, message } = err;
+  const { statusCode = 400, message } = err;
 
   res
     .status(statusCode)
