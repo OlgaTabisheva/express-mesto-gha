@@ -12,9 +12,9 @@ router.post('/cards', celebrate({
   }),
 }), createCards);
 router.delete('/cards/:cardId', celebrate({
-  body: Joi.object().keys({
-    cardId: Joi.string().required().min(10).max(30),
-  }),
+  headers: Joi.object().keys({
+    // валидируем заголовки
+  }).unknown(true),
 }), deleteCard);
 router.put('/cards/:cardId/likes', likeCard);
 router.delete('/cards/:cardId/likes', dislikeCard);
