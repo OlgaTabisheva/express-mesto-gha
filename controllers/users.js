@@ -22,8 +22,6 @@ const createUser = (req, res) => {
   if (!email || !password) {
     return res.status(400).send({ message: 'Ошибка на стороне пользователя. Возможно емаил и пароль введены некорректно' });
   }
-  user.find({ email }).then(() => res.status(409).send({ message: 'пользоатель существует' }));
-
   return bcrypt.hash(req.body.password, 10)
     .then((hash) => user.create({
       name,
@@ -46,6 +44,10 @@ const createUser = (req, res) => {
         const fields = Object.keys(err.errors).join(',');
         return res.status(400).send({ message: `${fields} не корректно` });
       }
+      if (err.code === 11000) {
+        return res.status(409).send({ message: 'пользователь существует' });
+      }
+      console.log(err)
       return res.status(500).send({ message: err.message });
     });
 };
