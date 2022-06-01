@@ -47,7 +47,6 @@ const createUser = (req, res) => {
       if (err.code === 11000) {
         return res.status(409).send({ message: 'пользователь существует' });
       }
-      console.log(err)
       return res.status(500).send({ message: err.message });
     });
 };
