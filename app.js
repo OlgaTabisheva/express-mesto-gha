@@ -11,14 +11,20 @@ const { PORT = 3000 } = process.env;
 const { createUser, login } = require('./controllers/users');
 
 app.use(express.json());
-app.post('/signin', login);
+app.post('/signin', login, celebrate({
+  body: Joi.object().keys({
+    email: Joi.string().required().email(),
+    password: Joi.string().required().min(5),
+  }),
+}),);
+
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required().min(5),
-    name: Joi.string().required().min(2).max(30),
-    about: Joi.string().required().min(2).max(30),
-    avatar: Joi.number().integer().required().min(18),
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
+    avatar: Joi.number().integer().min(18),
 
   }),
 }), createUser);
