@@ -14,7 +14,8 @@ const userSchema = new mongoose.Schema({
     default: 'Исследователь',
   },
   avatar: {
-    type: String,
+    work: mongoose.SchemaTypes.url,
+    profile: mongoose.SchemaTypes.url,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
   },
   email: {
