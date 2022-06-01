@@ -11,7 +11,7 @@ const getUsers = (req, res) => {
         const fields = Object.keys(err.errors).join(',');
         return res.status(400).send({ message: `${fields} Пользователь не найден` });
       }
-      return res.status(500).send({ message: 'Ошибка сервера' });
+      return res.status(500).send({ message: err.message });
     });
 };
 
@@ -36,7 +36,7 @@ const createUser = (req, res) => {
         const fields = Object.keys(err.errors).join(',');
         return res.status(400).send({ message: `${fields} не корректно` });
       }
-      return res.status(500).send({ message: 'Ошибка сервера' });
+      return res.status(500).send({ message: err.message });
     });
 };
 
@@ -51,7 +51,7 @@ const getUser = (req, res) => {
       }
       return res.send({ data: newUser });
     })
-    .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
+    .catch((err) => res.status(500).send({ message: err.message }));
 };
 
 const getUserMe = (req, res) => {
@@ -67,7 +67,7 @@ const getUserMe = (req, res) => {
         const fields = Object.keys(err.errors).join(',');
         return res.status(400).send({ message: `${fields} Ошибка` });
       }
-      return res.status(500).send({ message: 'Ошибка сервера' });
+      return res.status(500).send({ message: err.message });
     });
 };
 
@@ -89,7 +89,7 @@ const patchUser = (req, res) => {
         const fields = Object.keys(err.errors).join(',');
         return res.status(400).send({ message: `${fields} Ошибка` });
       }
-      return res.status(500).send({ message: 'Ошибка сервера' });
+      return res.status(500).send({ message: err.message });
     });
 };
 
@@ -109,7 +109,7 @@ const patchAvatar = (req, res) => {
         const fields = Object.keys(err.errors).join(',');
         return res.status(400).send({ message: `${fields} не корректно` });
       }
-      return res.status(500).send({ message: 'Ошибка сервера' });
+      return res.status(500).send({ message: err.message });
     });
 };
 
