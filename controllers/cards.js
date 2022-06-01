@@ -25,7 +25,6 @@ const createCards = (req, res) => {
 };
 
 const deleteCard = (req, res) => {
-
   if (!mongoose.Types.ObjectId.isValid(req.params.cardId)) {
     return res.status(400).send({ message: 'Некорректный ID' });
   }
@@ -63,7 +62,7 @@ const dislikeCard = (req, res) => {
   }
   return card.findByIdAndUpdate(
     req.params.cardId,
-    { $pull: { likes: req.user} },
+    { $pull: { likes: req.user } },
     {},
   )
     .then((likes) => {
