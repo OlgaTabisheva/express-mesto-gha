@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs'); // импортируем bcrypt
 const user = require('../models/user');
@@ -52,10 +51,7 @@ const createUser = (req, res) => {
 };
 
 const getUser = (req, res) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.userId)) {
-    return res.status(400).send({ message: 'Некорректный ID' });
-  }
-  return user.findById(req.params.userId)
+  user.findById(req.params.userId)
     .then((newUser) => {
       if (newUser === null) {
         return res.status(404).send({ message: 'Пользователь не найден' });
