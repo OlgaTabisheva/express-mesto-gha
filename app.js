@@ -11,12 +11,12 @@ const { PORT = 3000 } = process.env;
 const { createUser, login } = require('./controllers/users');
 
 app.use(express.json());
-app.post('/signin', login, celebrate({
+app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required().min(5),
   }),
-}),);
+}), login);
 
 app.post('/signup', celebrate({
   body: Joi.object().keys({
