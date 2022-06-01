@@ -30,7 +30,15 @@ const createUser = (req, res) => {
       email: req.body.email,
       password: hash, // записываем хеш в базу
     }))
-    .then((newUser) => res.send({ data: newUser }))
+    .then((newUser) => {
+      const outUser = {
+        name: newUser.name,
+        about: newUser.about,
+        avatar: newUser.avatar,
+        _id: newUser._id,
+      };
+      res.send({ data: outUser });
+    })
     .catch((err) => {
       if (err.name === 'ValidationError') {
         const fields = Object.keys(err.errors).join(',');
