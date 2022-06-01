@@ -24,7 +24,7 @@ app.post('/signup', celebrate({
     password: Joi.string().required().min(5),
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.link(),
+    avatar: Joi.string().uri(),
 
   }),
 }), createUser);
@@ -34,17 +34,16 @@ app.use(errors());
 app.use((req, res) => {
   res.status(404).send({ message: 'Ошибка' });
 });
-app.use((err, req, res, next) => {
+app.use((req, res, next) => {
   // если у ошибки нет статуса, выставляем 500
-  const { statusCode = 400, message } = err;
+  const { statusCode = 500, messageReq } = req;
 
-  res
-    .status(statusCode)
+  res.status(statusCode)
     .send({
       // проверяем статус и выставляем сообщение в зависимости от него
       message: statusCode === 500
         ? 'На сервере произошла ошибка'
-        : message,
+        : messageReq,
     });
   next();
 });
