@@ -4,9 +4,8 @@ const {
   getCards, createCards, deleteCard, likeCard, dislikeCard,
 } = require('../controllers/cards');
 
-
 router.get('/cards', getCards);
-router.post('/cards',celebrate({
+router.post('/cards', celebrate({
   body: Joi.object().keys({
     name: Joi.string().required().min(2).max(30),
     link: Joi.link().required(),
