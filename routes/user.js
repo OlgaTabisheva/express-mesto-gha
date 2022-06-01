@@ -8,10 +8,15 @@ router.get('/users/me', getUserMe);
 router.get('/users/:userId', getUser);
 router.patch('/users/me', celebrate({
   body: Joi.object().keys({
-    userId: Joi.string().required(),
+    name: Joi.string().min(2).max(30),
+    about: Joi.string().min(2).max(30),
   }),
 }), patchUser);
 router.get('/users', getUsers);
-router.patch('/users/me/avatar', patchAvatar);
+router.patch('/users/me/avatar', celebrate({
+  body: Joi.object().keys({
+    avatar: Joi.string().uri(),
+  }),
+}), patchAvatar);
 
 module.exports.userRouter = router;
