@@ -22,6 +22,8 @@ const createUser = (req, res) => {
   if (!email || !password) {
     return res.status(400).send({ message: 'Ошибка на стороне пользователя. Возможно емаил и пароль введены некорректно' });
   }
+  user.find({ email }).then(() => res.status(409).send({ message: 'пользоатель существует' }));
+
   return bcrypt.hash(req.body.password, 10)
     .then((hash) => user.create({
       name,
@@ -63,7 +65,7 @@ const getUser = (req, res) => {
 };
 
 const getUserMe = (req, res) => {
-  const { _id } = req.user._id;
+  const { _id } = req.user;
   user.find(
     { _id },
   )
@@ -82,7 +84,7 @@ const getUserMe = (req, res) => {
 const patchUser = (req, res) => {
   const { name, about } = req.body;
   user.findByIdAndUpdate(
-    req.user._id,
+    req.user,
     { name, about },
     {
       new: true,
@@ -104,7 +106,7 @@ const patchUser = (req, res) => {
 const patchAvatar = (req, res) => {
   const { avatar } = req.body;
   user.findByIdAndUpdate(
-    req.user._id,
+    req.user,
     { avatar },
     {
       new: true,
