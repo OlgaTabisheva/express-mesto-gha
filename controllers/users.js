@@ -120,7 +120,7 @@ const patchAvatar = (req, res) => {
     });
 };
 
-const login = (req, res) => {
+const login = (req, res, next) => {
   const { email, password } = req.body;
   user.findOne({ email }).select('+password')
     .then((userM) => {
@@ -137,9 +137,7 @@ const login = (req, res) => {
       }
       return res.status(401).send({ message: 'неверный пользователь или пароль' });
     })
-    .catch((err) => {
-      res.status(401).send({ message: err.message });
-    });
+    .catch((err) => next(err));
 };
 
 module.exports = {

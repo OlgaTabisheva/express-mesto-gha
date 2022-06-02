@@ -34,7 +34,7 @@ app.use(errors());
 app.use((req, res) => {
   res.status(404).send({ message: 'Ошибка' });
 });
-app.use((req, res, next) => {
+/* app.use((req, res, next) => {
   // если у ошибки нет статуса, выставляем 500
   const { statusCode = 500, messageReq } = req;
 
@@ -44,8 +44,11 @@ app.use((req, res, next) => {
       message: messageReq,
     });
   next();
+}); */
+app.use((err, req, res, next) => {
+  res.status(err.statusCode).send({ message: err.message });
+  next();
 });
-
 mongoose.connect('mongodb://localhost:27017/mestodb', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
