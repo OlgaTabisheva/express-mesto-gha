@@ -39,11 +39,10 @@ const createUser = (req, res) => {
       res.send({ data: outUser });
     })
     .catch((err) => {
-      const regex = /((https?:\/\/)?(www[.])?)+([\w]{1,64}\.[\w]{1,64})[^\s@]*/g;
-      const str = 'newUser.avatar';
-      regex.test(str);
-      const red = regex.test(str);
-      if (red === false) {
+      const regex = /^https?:\/\/?[\w-]{1,32}\.[\w-]{1,32}[^\s@]*/gm;
+      regex.test(avatar);
+      const reg = regex.test(avatar);
+      if (reg === false) {
         return res.status(400).send({ message: err.message });
       }
       if (err.name === 'ValidationError') {
