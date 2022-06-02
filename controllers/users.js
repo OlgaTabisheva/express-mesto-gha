@@ -39,12 +39,6 @@ const createUser = (req, res) => {
       res.send({ data: outUser });
     })
     .catch((err) => {
-      const regex = /^https?:\/\/?[\w-]{1,32}\.[\w-]{1,32}[^\s@]*/gm;
-      regex.test(avatar);
-      const reg = regex.test(avatar);
-      if (reg === false) {
-        return res.status(400).send({ message: err.message });
-      }
       if (err.name === 'ValidationError') {
         const fields = Object.keys(err.errors).join(',');
         return res.status(400).send({ message: `${fields} не корректно` });
