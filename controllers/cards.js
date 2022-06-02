@@ -29,7 +29,7 @@ async function deleteCard(req, res) {
     return res.status(400).send({ message: 'Некорректный ID' });
   }
   const thisCard = await card.findOne({ _id: req.params.cardId });
-  if (thisCard.owner._id !== req.user._id) {
+  if (thisCard && thisCard.owner._id !== req.user._id) {
     return res.status(403).send({ message: 'Чужая карточка' });
   }
   return card.findByIdAndRemove(req.params.cardId)
