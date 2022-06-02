@@ -38,23 +38,18 @@ const deleteCard = (req, res) => {
     .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
 };
 
-const likeCard = (req, res) => {
-  if (!mongoose.Types.ObjectId.isValid(req.params.cardId)) {
-    return res.status(400).send({ message: 'Некорректный ID' });
-  }
-  return card.findByIdAndUpdate(
-    req.params.cardId,
-    { $addToSet: { likes: req.user._id } },
-    {},
-  )
-    .then((likes) => {
-      if (likes === null) {
-        return res.status(404).send({ message: 'Карточка не найдена' });
-      }
-      return res.send({ data: likes });
-    })
-    .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
-};
+const likeCard = (req, res) => card.findByIdAndUpdate(
+  req.params.cardId,
+  { $addToSet: { likes: req.user._id } },
+  {},
+)
+  .then((likes) => {
+    if (likes === null) {
+      return res.status(404).send({ message: 'Карточка не найдена' });
+    }
+    return res.send({ data: likes });
+  })
+  .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
 
 const dislikeCard = (req, res) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.cardId)) {
