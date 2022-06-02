@@ -63,7 +63,7 @@ const getUser = (req, res) => {
 
 const getUserMe = (req, res) => {
   const { _id } = req.user;
-  user.find(
+  user.findOne(
     { _id },
   )
     .then((newUser) => {
