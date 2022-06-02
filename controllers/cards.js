@@ -24,9 +24,13 @@ const createCards = (req, res) => {
     });
 };
 
-const deleteCard = (req, res) => {
+async function deleteCard(req, res) {
   if (!mongoose.Types.ObjectId.isValid(req.params.cardId)) {
     return res.status(400).send({ message: 'Некорректный ID' });
+  }
+  const thisCard = await card.find({ _id: req.params.cardId });
+  if (thisCard !== req.params.cardId) {
+    return res.status(403).send({ message: 'Чужая карточка' });
   }
   return card.findByIdAndRemove(req.params.cardId)
     .then((newCard) => {
@@ -36,7 +40,7 @@ const deleteCard = (req, res) => {
       return res.send({ data: newCard });
     })
     .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
-};
+}
 
 const likeCard = (req, res) => card.findByIdAndUpdate(
   req.params.cardId,
