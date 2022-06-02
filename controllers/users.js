@@ -67,7 +67,7 @@ const getUserMe = (req, res) => {
     { _id },
   )
     .then((newUser) => {
-      res.send({ data: newUser });
+      res.send(newUser);
     })
     .catch((err) => {
       if (err.name === 'ValidationError' || err.about === 'ValidationError') {
