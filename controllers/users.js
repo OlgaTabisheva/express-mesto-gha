@@ -132,7 +132,7 @@ const login = (req, res, next) => {
     .then((userM) => {
       if (!userM) {
         // перейдём в .catch, отклонив промис
-        return Promise.reject(new Error('Что-то не так с почтой или паролем'));
+        return Promise.reject(new Error('Что-то не так с почтой или паролем!'));
       }
       if (bcrypt.compare(password, userM.password)) {
         return res.send({
