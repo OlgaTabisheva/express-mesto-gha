@@ -94,7 +94,7 @@ const patchUser = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError' || err.about === 'ValidationError') {
         const fields = Object.keys(err.errors).join(',');
-        return res.status(400).send({ message: `${fields} Ошибка` });
+        return res.status(400).send({ message: `${fields} Ошибка ` });
       }
       return res.status(500).send({ message: err.message });
     });
