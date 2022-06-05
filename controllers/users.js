@@ -2,24 +2,27 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs'); // импортируем bcrypt
 const user = require('../models/user');
 
-const getUsers = (req, res) => {
+const getUsers = (req, res, next) => {
   user.find({})
     .then((users) => res.status(200).send({ data: users }))
     .catch((err) => {
       if (err.user === 'ValidationError') {
         const fields = Object.keys(err.errors).join(',');
-        return res.status(400).send({ message: `${fields} Пользователь не найден` });
+        next({ message: `${fields} Пользователь не найден`, statusCode: 400 });
+        // return res.status(400).send({ message: `${fields} Пользователь не найден` });
       }
       return res.status(500).send({ message: err.message });
     });
 };
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
   if (!email || !password) {
-    return res.status(400).send({ message: 'Ошибка на стороне пользователя. Возможно емаил и пароль введены некорректно' });
+    const err = new Error('errorNotFound');
+    next(err);
+  /* return res.status(400).send({ message: 'Ошибка пользователя.емаил и пароль некорректны' }); */
   }
   return bcrypt.hash(req.body.password, 10)
     .then((hash) => user.create({

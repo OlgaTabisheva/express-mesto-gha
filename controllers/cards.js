@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
 const card = require('../models/card');
 
-const getCards = (req, res) => {
+const getCards = (req, res, next) => {
   card.find({})
-    .then((cards) => res.send({ data: cards }))
-    .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
+    .then((cards) => res.send({ data: cards }));
+  next({ message: 'Ошибка сервера', statusCode: 500 });
+  // .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
 };
 
 const createCards = (req, res) => {

@@ -19,7 +19,7 @@ const userSchema = new mongoose.Schema({
     type: String,
     default: 'https://pictures.s3.yandex.net/resources/jacques-cousteau_1604399756.png',
     validator: [validator.isURL({
-      message: 'Must be a Valid URL', protocols: ['http', 'https', 'ftp'], require_tld: true, require_protocol: true,
+      message: 'Must be a Valid URL', protocols: ['http', 'https', 'ftp'],
     })],
   },
   email: {
