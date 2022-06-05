@@ -18,7 +18,7 @@ const getUsers = (req, res) => {
     });
 };
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
@@ -45,7 +45,7 @@ const createUser = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         const fields = Object.keys(err.errors).join(',');
-        throw new RequestErr(`${fields} не корректно`);
+        next(new RequestErr(`${fields} не корректно`));
       }
       if (err.code === 11000) {
         return res.status(409).send({ message: 'пользователь существует' });
