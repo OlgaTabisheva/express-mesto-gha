@@ -14,26 +14,27 @@ app.use(express.json());
 app.post('/signin', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    password: Joi.string().required().min(5),
+    password: Joi.string().required(),
   }),
 }), login);
 
 app.post('/signup', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
-    password: Joi.string().required().min(5),
+    password: Joi.string().required(),
     name: Joi.string().min(2).max(30),
     about: Joi.string().min(2).max(30),
-    avatar: Joi.string().pattern(/(https?:\/\/)(w{3}\.)?(((\d{1,3}\.){3}\d{1,3})|((\w-?)+\.(ru|com)))(:\d{2,5})?((\/.+)+)?\/?#?/),
+    avatar: Joi.string().pattern(/(https?:\/\/)(w{3}\.)?(((\d{1,3}\.){3}\d{1,3})|((\w-?)+\.([^\d][^\d])))(:\d{2,5})?((\/.+)+)?\/?#?/),
 
   }),
 }), createUser);
 app.use('/', auth, userRouter);
 app.use('/', auth, cardRouter);
-app.use(errors());
+
 app.use((req, res) => {
   res.status(404).send({ message: 'Ошибка' });
 });
+app.use(errors());
 /* app.use((req, res, next) => {
   // если у ошибки нет статуса, выставляем 500
   const { statusCode = 500, messageReq } = req;
