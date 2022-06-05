@@ -1,28 +1,29 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs'); // импортируем bcrypt
 const user = require('../models/user');
+const NotFoundError = require('../errors/not-found-err');
+const RequestErr = require('../errors/request-err');
+const NotAutErr = require('../errors/not-aut-err');
+const ServerErr = require('../errors/server-err');
 
-const getUsers = (req, res, next) => {
+const getUsers = (req, res) => {
   user.find({})
     .then((users) => res.status(200).send({ data: users }))
     .catch((err) => {
       if (err.user === 'ValidationError') {
         const fields = Object.keys(err.errors).join(',');
-        next({ message: `${fields} Пользователь не найден`, statusCode: 400 });
-        // return res.status(400).send({ message: `${fields} Пользователь не найден` });
+        throw new RequestErr(`${fields} Пользователь не найден`);
       }
-      return res.status(500).send({ message: err.message });
+      throw new ServerErr('Ошибка сервера');
     });
 };
 
-const createUser = (req, res, next) => {
+const createUser = (req, res) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
   if (!email || !password) {
-    const err = new Error('errorNotFound');
-    next(err);
-  /* return res.status(400).send({ message: 'Ошибка пользователя.емаил и пароль некорректны' }); */
+    throw new RequestErr('Ошибка пользователя.емаил и пароль некорректны');
   }
   return bcrypt.hash(req.body.password, 10)
     .then((hash) => user.create({
@@ -44,24 +45,22 @@ const createUser = (req, res, next) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         const fields = Object.keys(err.errors).join(',');
-        return res.status(400).send({ message: `${fields} не корректно` });
+        throw new RequestErr(`${fields} не корректно`);
       }
       if (err.code === 11000) {
         return res.status(409).send({ message: 'пользователь существует' });
       }
-      return res.status(500).send({ message: err.message });
+      throw new ServerErr('Ошибка сервера');
     });
 };
 
 const getUser = (req, res) => {
   user.findById(req.params.userId)
     .then((newUser) => {
-      if (newUser === null) {
-        return res.status(404).send({ message: 'Пользователь не найден' });
-      }
+      if (newUser === null) { throw new NotFoundError('Пользователь не найден'); }
       return res.send({ data: newUser });
-    })
-    .catch((err) => res.status(500).send({ message: err.message }));
+    });
+  throw new ServerErr('Ошибка сервера');
 };
 
 const getUserMe = (req, res) => {
@@ -75,9 +74,9 @@ const getUserMe = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError' || err.about === 'ValidationError') {
         const fields = Object.keys(err.errors).join(',');
-        return res.status(400).send({ message: `${fields} Ошибка` });
+        throw new RequestErr(`${fields} Ошибка`);
       }
-      return res.status(500).send({ message: err.message });
+      throw new ServerErr('Ошибка сервера');
     });
 };
 
@@ -97,9 +96,9 @@ const patchUser = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError' || err.about === 'ValidationError') {
         const fields = Object.keys(err.errors).join(',');
-        return res.status(400).send({ message: `${fields} Ошибка ` });
+        throw new RequestErr(`${fields} Ошибка`);
       }
-      return res.status(500).send({ message: err.message });
+      throw new ServerErr('Ошибка сервера');
     });
 };
 
@@ -117,9 +116,9 @@ const patchAvatar = (req, res) => {
     .catch((err) => {
       if (err.avatar === 'ValidationError') {
         const fields = Object.keys(err.errors).join(',');
-        return res.status(400).send({ message: `${fields} не корректно` });
+        throw new RequestErr(`${fields} не корректно`);
       }
-      return res.status(500).send({ message: err.message });
+      throw new ServerErr('Ошибка сервера');
     });
 };
 
@@ -129,7 +128,7 @@ const login = (req, res, next) => {
     .then((userM) => {
       if (!userM) {
         // перейдём в .catch, отклонив промис
-        return res.status(401).send({ message: 'неверный пользователь или пароль' });
+        throw new NotAutErr('неверный пользователь или пароль');
       }
       if (bcrypt.compare(password, userM.password)) {
         return res.send({
@@ -138,7 +137,7 @@ const login = (req, res, next) => {
           }),
         });
       }
-      return res.status(401).send({ message: 'неверный пользователь или пароль' });
+      throw new NotAutErr('неверный пользователь или пароль');
     })
     .catch((err) => next(err));
 };

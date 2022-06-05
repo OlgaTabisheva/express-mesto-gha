@@ -33,7 +33,6 @@ app.use('/', auth, cardRouter);
 
 app.use((req, res, next) => {
   next({ message: 'Ошибка', statusCode: 404 });
-  // res.status(404).send({ message: 'Ошибка' });
 });
 app.use(errors());
 app.use((err, req, res, next) => {
@@ -49,13 +48,6 @@ app.use((err, req, res, next) => {
 });
 app.use((err, req, res, next) => {
   res.status(err.statusCode).send({ message: err.message });
-  next();
-});
-app.use((err, req, res, next) => {
-  if (err.message === 'errorNotFound') {
-    res.status(400).send({ message: 'Ошибка на стороне пользователя' });
-  }
-  res.status(500).send({ message: 'Ошибка' });
   next();
 });
 
