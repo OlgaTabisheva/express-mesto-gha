@@ -1,5 +1,3 @@
-const validator = require('validator');
-
 const mongoose = require('mongoose');
 
 const cardSchema = new mongoose.Schema({
@@ -12,9 +10,6 @@ const cardSchema = new mongoose.Schema({
   link: {
     type: String,
     required: true,
-    validator: [validator.isURL({
-      message: 'Must be a Valid URL', protocols: ['http', 'https', 'ftp'],
-    })],
   },
   owner: {
     type: mongoose.Schema.Types.ObjectId,
@@ -31,4 +26,10 @@ const cardSchema = new mongoose.Schema({
     default: Date.now,
   },
 });
+
+cardSchema.path('link').validate((val) => {
+  const urlRegex = /(https?:\/\/)(w{3}\.)?(((\d{1,3}\.){3}\d{1,3})|((\w-?)+\.([^\d][^\d])))(:\d{2,5})?((\/.+)+)?\/?#?/;
+  return urlRegex.test(val);
+}, 'Invalid URL.');
+
 module.exports = mongoose.model('card', cardSchema);
