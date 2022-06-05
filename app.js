@@ -35,19 +35,20 @@ app.use((req, res, next) => {
   next({ message: 'Ошибка', statusCode: 404 });
 });
 app.use(errors());
+
+app.use((err, req, res, next) => {
+  res.status(err.statusCode).send({ message: err.message });
+  next();
+});
+
 app.use((err, req, res, next) => {
   // если у ошибки нет статуса, выставляем 500
   const { statusCode = 500, messageReq } = err;
-
   res.status(statusCode)
     .send({
       // проверяем статус и выставляем сообщение в зависимости от него
       message: messageReq,
     });
-  next();
-});
-app.use((err, req, res, next) => {
-  res.status(err.statusCode).send({ message: err.message });
   next();
 });
 
