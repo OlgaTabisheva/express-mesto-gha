@@ -29,7 +29,7 @@ const createCards = (req, res) => {
 
 async function deleteCard(req, res) {
   if (!mongoose.Types.ObjectId.isValid(req.params.cardId)) {
-    return new RequestErr('Некорректный ID');
+    throw new RequestErr('Некорректный ID');
   }
   const thisCard = await card.findOne({ _id: req.params.cardId });
   if (thisCard && !thisCard.owner._id.equals(req.user._id)) {
@@ -52,7 +52,7 @@ const likeCard = (req, res) => card.findByIdAndUpdate(
 )
   .then((likes) => {
     if (likes === null) {
-      return new NotFoundError('Карточка не найдена');
+      throw new NotFoundError('Карточка не найдена');
     }
     return res.send({ data: likes });
   })

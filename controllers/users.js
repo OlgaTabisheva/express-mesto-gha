@@ -23,7 +23,7 @@ const createUser = (req, res, next) => {
     name, about, avatar, email, password,
   } = req.body;
   if (!email || !password) {
-    return new RequestErr('Ошибка пользователя.емаил и пароль некорректны');
+    throw new RequestErr('Ошибка пользователя.емаил и пароль некорректны');
   }
   return bcrypt.hash(req.body.password, 10)
     .then((hash) => user.create({
