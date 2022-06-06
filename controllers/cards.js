@@ -4,10 +4,10 @@ const NotFoundError = require('../errors/not-found-err');
 const RequestErr = require('../errors/request-err');
 const ServerErr = require('../errors/server-err');
 
-const getCards = (req, res) => {
+const getCards = (req, res, next) => {
   card.find({})
-    .then((cards) => res.send({ data: cards }));
-  throw new ServerErr('Ошибка сервера');
+    .then((cards) => res.send({ data: cards }))
+    .catch((err) => next(err));
 };
 
 const createCards = (req, res) => {
@@ -27,7 +27,7 @@ const createCards = (req, res) => {
     });
 };
 
-async function deleteCard(req, res) {
+async function deleteCard(req, res, next) {
   if (!mongoose.Types.ObjectId.isValid(req.params.cardId)) {
     throw new RequestErr('Некорректный ID');
   }
@@ -42,10 +42,10 @@ async function deleteCard(req, res) {
       }
       res.send({ data: newCard });
     })
-    .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
+    .catch((err) => next(err));
 }
 
-const likeCard = (req, res) => card.findByIdAndUpdate(
+const likeCard = (req, res, next) => card.findByIdAndUpdate(
   req.params.cardId,
   { $addToSet: { likes: req.user._id } },
   {},
@@ -56,9 +56,9 @@ const likeCard = (req, res) => card.findByIdAndUpdate(
     }
     return res.send({ data: likes });
   })
-  .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
+  .catch((err) => next(err));
 
-const dislikeCard = (req, res) => {
+const dislikeCard = (req, res, next) => {
   if (!mongoose.Types.ObjectId.isValid(req.params.cardId)) {
     throw new RequestErr('Некорректный ID');
   }
@@ -73,7 +73,7 @@ const dislikeCard = (req, res) => {
       }
       return res.send({ data: likes });
     })
-    .catch(() => res.status(500).send({ message: 'Ошибка сервера' }));
+    .catch((err) => next(err));
 };
 
 module.exports = {

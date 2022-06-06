@@ -55,13 +55,16 @@ const createUser = (req, res, next) => {
     .catch((err) => next(err));
 };
 
-const getUser = (req, res) => {
+const getUser = (req, res, next) => {
   user.findById(req.params.userId)
     .then((newUser) => {
-      if (newUser === null) { throw new NotFoundError('Пользователь не найден'); }
-      return res.send({ data: newUser });
-    });
-  throw new ServerErr('Ошибка сервера');
+      if (newUser === null) {
+        throw new NotFoundError('Пользователь не найден');
+      } else {
+        return res.send({ data: newUser });
+      }
+    })
+    .catch((err) => next(err));
 };
 
 const getUserMe = (req, res) => {
