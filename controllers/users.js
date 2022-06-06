@@ -18,13 +18,16 @@ const getUsers = (req, res) => {
     });
 };
 
-const createUser = (req, res) => {
+const createUser = (req, res,next) => {
   const {
     name, about, avatar, email, password,
   } = req.body;
+  console.log('1')
   if (!email || !password) {
+    console.log('2')
     return new RequestErr('Ошибка пользователя.емаил и пароль некорректны');
   }
+  console.log('3')
   return bcrypt.hash(req.body.password, 10)
     .then((hash) => user.create({
       name,
@@ -34,6 +37,7 @@ const createUser = (req, res) => {
       password: hash, // записываем хеш в базу
     }))
     .then((newUser) => {
+      console.log('4')
       const outUser = {
         name: newUser.name,
         about: newUser.about,
@@ -43,15 +47,20 @@ const createUser = (req, res) => {
       res.send({ data: outUser });
     })
     .catch((err) => {
+
       if (err.name === 'ValidationError') {
+        console.log('5')
         const fields = Object.keys(err.errors).join(',');
-        return new RequestErr(`${fields} не корректно`);
+        throw new RequestErr(`${fields} не корректно`);
       }
       if (err.code === 11000) {
+        console.log('6')
         return res.status(409).send({ message: 'пользователь существует' });
       }
-      return new ServerErr('Ошибка сервера');
-    });
+      console.log('7')
+      throw new ServerErr('Ошибка сервера');
+    }).catch(err => next(err));
+
 };
 
 const getUser = (req, res) => {
