@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const { urlRegex } = require('../utils');
 
 const cardSchema = new mongoose.Schema({
   name: {
@@ -27,9 +28,6 @@ const cardSchema = new mongoose.Schema({
   },
 });
 
-cardSchema.path('link').validate((val) => {
-  const urlRegex = /(https?:\/\/)(w{3}\.)?(((\d{1,3}\.){3}\d{1,3})|((\w-?)+\.([^\d][^\d])))(:\d{2,5})?((\/.+)+)?\/?#?/;
-  return urlRegex.test(val);
-}, 'Invalid URL.');
+cardSchema.path('link').validate((val) => urlRegex.test(val), 'Invalid URL.');
 
 module.exports = mongoose.model('card', cardSchema);

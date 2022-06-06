@@ -5,6 +5,7 @@ const { errors } = require('celebrate');
 const { userRouter } = require('./routes/user');
 const { cardRouter } = require('./routes/card');
 const auth = require('./middlewares/auth');
+const { urlRegex } = require('./utils');
 
 const app = express();
 const { PORT = 3000 } = process.env;
@@ -22,9 +23,9 @@ app.post('/signup', celebrate({
   body: Joi.object().keys({
     email: Joi.string().required().email(),
     password: Joi.string().required(),
-    name: Joi.string().min(2).max(30),
-    about: Joi.string().min(2).max(30),
-    avatar: Joi.string().pattern(/(https?:\/\/)(w{3}\.)?(((\d{1,3}\.){3}\d{1,3})|((\w-?)+\.([^\d][^\d])))(:\d{2,5})?((\/.+)+)?\/?#?/),
+    name: Joi.string().optional().min(2).max(30),
+    about: Joi.string().optional().min(2).max(30),
+    avatar: Joi.string().pattern(urlRegex).allow('').optional(),
 
   }),
 }), createUser);

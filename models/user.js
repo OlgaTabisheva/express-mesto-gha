@@ -1,6 +1,6 @@
 const validator = require('validator');
-
 const mongoose = require('mongoose');
+const { urlRegex } = require('../utils');
 
 const userSchema = new mongoose.Schema({
   name: { // у пользователя есть имя — опишем требования к имени в схеме:
@@ -32,10 +32,7 @@ const userSchema = new mongoose.Schema({
   },
 });
 
-userSchema.path('avatar').validate((val) => {
-  const urlRegex = /(https?:\/\/)(w{3}\.)?(((\d{1,3}\.){3}\d{1,3})|((\w-?)+\.([^\d][^\d])))(:\d{2,5})?((\/.+)+)?\/?#?/;
-  return urlRegex.test(val);
-}, 'Invalid URL.');
+userSchema.path('avatar').validate((val) => urlRegex.test(val), 'Invalid URL.');
 
 userSchema.path('email').validate((val) => validator.isEmail(val), 'Invalid email.');
 
