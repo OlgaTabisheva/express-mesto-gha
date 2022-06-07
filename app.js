@@ -6,6 +6,7 @@ const { userRouter } = require('./routes/user');
 const { cardRouter } = require('./routes/card');
 const auth = require('./middlewares/auth');
 const { urlRegex } = require('./utils');
+const NotFoundError = require('./errors/not-found-err');
 
 const app = express();
 const { PORT = 3000 } = process.env;
@@ -29,19 +30,13 @@ app.post('/signup', celebrate({
 
   }),
 }), createUser);
+
 app.use('/', auth, userRouter);
 app.use('/', auth, cardRouter);
-
 app.use((req, res, next) => {
-  next({ message: 'Ошибка', statusCode: 404 });
+  next(new NotFoundError('Маршрут не найден'));
 });
 app.use(errors());
-
-app.use((err, req, res, next) => {
-  res.status(err.statusCode).send({ message: err.message });
-  next();
-});
-
 app.use((err, req, res, next) => {
   // если у ошибки нет статуса, выставляем 500
   const { statusCode = 500, messageReq } = err;

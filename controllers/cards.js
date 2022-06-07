@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const card = require('../models/card');
 const NotFoundError = require('../errors/not-found-err');
 const RequestErr = require('../errors/request-err');
-const ServerErr = require('../errors/server-err');
 
 const getCards = (req, res, next) => {
   card.find({})
@@ -10,7 +9,7 @@ const getCards = (req, res, next) => {
     .catch((err) => next(err));
 };
 
-const createCards = (req, res) => {
+const createCards = (req, res, next) => {
   const { name, link } = req.body;
   const owner = req.user;
   if (!name || !link) {
@@ -21,9 +20,10 @@ const createCards = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         const fields = Object.keys(err.errors).join(',');
-        throw new RequestErr(`${fields} не корректно`);
+        next(new RequestErr(`${fields} не корректно`));
+      } else {
+        next(err);
       }
-      throw new ServerErr('Ошибка сервера');
     });
 };
 
