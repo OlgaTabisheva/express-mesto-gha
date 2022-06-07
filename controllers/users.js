@@ -109,14 +109,20 @@ const login = (req, res, next) => {
         // перейдём в .catch, отклонив промис
         throw new NotAutErr('неверный пользователь или пароль');
       }
-      if (bcrypt.compare(password, userM.password)) {
-        return res.send({
-          token: jwt.sign({ _id: userM._id }, 'some-secret-key', {
-            expiresIn: '7d',
-          }),
+      return bcrypt.compare(password, userM.password)
+        .then((matched) => {
+          if (!matched) {
+            throw new NotAutErr('неверный пользователь или пароль');
+          }
+          return userM;
         });
-      }
-      throw new NotAutErr('неверный пользователь или пароль');
+    })
+    .then((data) => {
+      res.send({
+        token: jwt.sign({ _id: data._id }, 'some-secret-key', {
+          expiresIn: '7d',
+        }),
+      });
     })
     .catch((err) => next(err));
 };
