@@ -29,14 +29,13 @@ async function deleteCard(req, res, next) {
       } else if (!thisCard.owner._id.equals(req.user._id)) {
         throw new ForbiddenErr('Чужая карточка');
       }
-    })
-    .catch((err) => next(err));
-  return card.findByIdAndRemove(req.params.cardId)
-    .then((newCard) => {
-      if (newCard === null) {
-        throw new NotFoundError('Карточка не найдена');
-      }
-      res.send({ data: newCard });
+      return card.findByIdAndRemove(req.params.cardId)
+        .then((newCard) => {
+          if (newCard === null) {
+            throw new NotFoundError('Карточка не найдена');
+          }
+          res.send({ data: newCard });
+        });
     })
     .catch((err) => next(err));
 }
