@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const card = require('../models/card');
 const NotFoundError = require('../errors/not-found-err');
 const RequestErr = require('../errors/request-err');
+const ForbiddenErr = require('../errors/forbidden-err');
 
 const getCards = (req, res, next) => {
   card.find({})
@@ -21,12 +22,11 @@ const createCards = (req, res, next) => {
 };
 
 async function deleteCard(req, res, next) {
-  if (!mongoose.Types.ObjectId.isValid(req.params.cardId)) {
-    throw new RequestErr('Некорректный ID');
-  }
   const thisCard = await card.findOne({ _id: req.params.cardId });
-  if (thisCard && !thisCard.owner._id.equals(req.user._id)) {
-    res.status(403).send({ message: 'Чужая карточка' });
+  if (!thisCard) {
+    throw new NotFoundError('Карточка не найдена');
+  } else if (!thisCard.owner._id.equals(req.user._id)) {
+    throw new ForbiddenErr('Чужая карточка');
   }
   return card.findByIdAndRemove(req.params.cardId)
     .then((newCard) => {
