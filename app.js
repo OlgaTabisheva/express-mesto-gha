@@ -33,7 +33,7 @@ app.post('/signup', celebrate({
 
 app.use('/', auth, userRouter);
 app.use('/', auth, cardRouter);
-app.use((req, res, next) => {
+app.use('/', auth, (req, res, next) => {
   next(new NotFoundError('Маршрут не найден'));
 });
 app.use(errors());
