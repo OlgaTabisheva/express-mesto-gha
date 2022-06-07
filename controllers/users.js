@@ -6,16 +6,10 @@ const RequestErr = require('../errors/request-err');
 const NotAutErr = require('../errors/not-aut-err');
 const ServerErr = require('../errors/server-err');
 
-const getUsers = (req, res) => {
+const getUsers = (req, res, next) => {
   user.find({})
     .then((users) => res.status(200).send({ data: users }))
-    .catch((err) => {
-      if (err.user === 'ValidationError') {
-        const fields = Object.keys(err.errors).join(',');
-        throw new RequestErr(`${fields} Пользователь не найден`);
-      }
-      throw new ServerErr('Ошибка сервера');
-    });
+    .catch((err) => next(err));
 };
 
 const createUser = (req, res, next) => {
