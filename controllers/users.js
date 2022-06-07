@@ -41,7 +41,7 @@ const createUser = (req, res, next) => {
         throw new RequestErr(`${fields} не корректно`);
       }
       if (err.code === 11000) {
-        throw new ConflictErr('пользователь существует' );
+        throw new ConflictErr('пользователь существует');
       }
       throw new ServerErr('Ошибка сервера');
     })
