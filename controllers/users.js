@@ -60,7 +60,7 @@ const getUser = (req, res, next) => {
     .catch((err) => next(err));
 };
 
-const getUserMe = (req, res) => {
+const getUserMe = (req, res, next) => {
   const { _id } = req.user;
   user.findOne(
     { _id },
@@ -68,13 +68,7 @@ const getUserMe = (req, res) => {
     .then((newUser) => {
       res.send(newUser);
     })
-    .catch((err) => {
-      if (err.name === 'ValidationError' || err.about === 'ValidationError') {
-        const fields = Object.keys(err.errors).join(',');
-        throw new RequestErr(`${fields} Ошибка`);
-      }
-      throw new ServerErr('Ошибка сервера');
-    });
+    .catch((err) => next(err));
 };
 
 const patchUser = (req, res) => {
