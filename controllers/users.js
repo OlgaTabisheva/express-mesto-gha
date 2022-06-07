@@ -71,7 +71,7 @@ const getUserMe = (req, res, next) => {
     .catch((err) => next(err));
 };
 
-const patchUser = (req, res) => {
+const patchUser = (req, res, next) => {
   const { name, about } = req.body;
   user.findByIdAndUpdate(
     req.user,
@@ -84,13 +84,7 @@ const patchUser = (req, res) => {
     .then((newUser) => {
       res.send({ data: newUser });
     })
-    .catch((err) => {
-      if (err.name === 'ValidationError' || err.about === 'ValidationError') {
-        const fields = Object.keys(err.errors).join(',');
-        throw new RequestErr(`${fields} Ошибка`);
-      }
-      throw new ServerErr('Ошибка сервера');
-    });
+    .catch((err) => next(err));
 };
 
 const patchAvatar = (req, res) => {
