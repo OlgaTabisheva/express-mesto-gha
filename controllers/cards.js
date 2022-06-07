@@ -22,12 +22,15 @@ const createCards = (req, res, next) => {
 };
 
 async function deleteCard(req, res, next) {
-  const thisCard = await card.findOne({ _id: req.params.cardId });
-  if (!thisCard) {
-    throw new NotFoundError('Карточка не найдена');
-  } else if (!thisCard.owner._id.equals(req.user._id)) {
-    throw new ForbiddenErr('Чужая карточка');
-  }
+  card.findOne({ _id: req.params.cardId })
+    .then((thisCard) => {
+      if (!thisCard) {
+        throw new NotFoundError('Карточка не найдена');
+      } else if (!thisCard.owner._id.equals(req.user._id)) {
+        throw new ForbiddenErr('Чужая карточка');
+      }
+    })
+    .catch((err) => next(err));
   return card.findByIdAndRemove(req.params.cardId)
     .then((newCard) => {
       if (newCard === null) {
