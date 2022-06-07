@@ -5,6 +5,7 @@ const NotFoundError = require('../errors/not-found-err');
 const RequestErr = require('../errors/request-err');
 const NotAutErr = require('../errors/not-aut-err');
 const ServerErr = require('../errors/server-err');
+const ConflictError = require('../errors/conflict-error');
 
 const getUsers = (req, res, next) => {
   user.find({})
@@ -14,12 +15,8 @@ const getUsers = (req, res, next) => {
 
 const createUser = (req, res, next) => {
   const {
-    name, about, avatar, email, password,
-  } = req.body;
-  if (!email || !password) {
-    throw new RequestErr('Ошибка пользователя.емаил и пароль некорректны');
-  }
-  return bcrypt.hash(req.body.password, 10)
+    name, about, avatar,
+  } = req.body
     .then((hash) => user.create({
       name,
       about,
@@ -42,7 +39,7 @@ const createUser = (req, res, next) => {
         throw new RequestErr(`${fields} не корректно`);
       }
       if (err.code === 11000) {
-        return res.status(409).send({ message: 'пользователь существует' });
+        throw new ConflictError('пользователь существует');
       }
       throw new ServerErr('Ошибка сервера');
     })
